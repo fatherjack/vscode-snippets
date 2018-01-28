@@ -1,0 +1,81 @@
+{
+	/*
+	// Place your snippets for PowerShell here. Each snippet is defined under a snippet name and has a prefix, body and
+	// description. The prefix is what is used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. Placeholders with the
+	// same ids are connected.
+	// Example:
+	"Print to console": {
+		"prefix": "log",
+		"body": [
+			"console.log('$1');",
+			"$2"
+		],
+		"description": "Log output to console"
+	}
+*/
+	"Regex shortcuts": {
+		"prefix": "_regx",
+		"body": [
+			"<#",
+			"Operator - Logic",
+			"Value    - Exact characters anywhere in original value",
+			".        - Any single character, except newline",
+			"[value]  - At least one character in brackets",
+			"[range]  - At least one character within range",
+			"^        - Beginning character(s)",
+			"\\$        - End character(s)",
+			"\\w       - Any word character",
+			"\\d       - Any decimal digit",
+			"*        - Zero or more{0,}",
+			"+        - One or more{1,}",
+			"?        - Zero or one{0,1}",
+			"{n}      - Exactly n matches",
+			"{n,}     - At least n matches",
+			"{n,m}    - At least n, but no more than m, matches$0",
+			"#>"
+		],
+		"description": "Quick reference of common regex expressions"
+	},
+	"SQL SMO": {
+		"prefix": "_SQLsmo",
+		"body": [
+			"${1}\\$Servers = get-content ${2}\"C:\\Scripts\\Powershell\\Lookups\\Servers.txt\" ",
+			"${3}\\$Server = \"\\$ENV:COMPUTERNAME\\\\${4}sql2016\"",
+			"\\$SMOServer = new-object ('Microsoft.SQLServer.Management.Smo.Server') \\$Server$0"
+		],
+		"description": "SQL Server SMO line"
+	},
+	"For each SQL DB": {
+		"prefix": "_foreachDB",
+		"body": [
+			"foreach(\\$DB in \\$SMOServer.databases){$0",
+			"    ",
+			"}"
+		],
+		"description": "For each loop for SQL Server database itteration"
+	},
+	"SQL Assemblies": {
+		"prefix": "_SQLAssemblies",
+		"body": [
+			"[System.Reflection.Assembly]::LoadWithPartialName('Microsoft.SqlServer.SMO') | Out-Null ",
+			"[System.Reflection.Assembly]::LoadWithPartialName('Microsoft.SqlServer.SMOExtended') | Out-Null "
+		],
+		"description": "Lines to load SQL Server assemblies"
+	},
+	"GetHelp":{
+		"prefix":"_help",
+		"body": ["Get-Help ${1:FunctionName} -Full | clip | notepad.exe$0"],
+		"description": "Alternate to Get-Help for when the remove Get-Help - ShowWindow in PSv6"
+	},
+	"HashTableForEach":{
+		"prefix": "_HashTableForEach",
+		"body": [
+			"$${1:VariableName} = @{}",
+			"$${1:VariableName} = foreach($${2:ItemName} in $${3:SetName}){",
+			"${0:## loop logic in here}",
+			"}"
+		],
+		"description": "Presents a HashTable variable in place for the results of a foreach iteration that collects data."
+	}
+}
