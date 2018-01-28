@@ -6,7 +6,7 @@ If you haven't started using VSCode snippets yet then access them via the **File
 
 ## PowerShell
 
-## Regex shortcuts
+## Regex cheat sheet
 
 ### Prefix: _regx
 
@@ -38,6 +38,9 @@ If you haven't started using VSCode snippets yet then access them via the **File
     For each loop for SQL Server database itteration
 
     Sample:
+    "foreach(\\$DB in \\$SMOServer.databases){",
+    "    ${0:Your script logic here}",
+    "}"
 
 ## SQL Assemblies
 
