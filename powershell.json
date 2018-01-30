@@ -78,6 +78,9 @@
 			"C:\\WINDOWS\\system32\\eventvwr.msc ${0}"
 		],
 		"description": "start Event Viewer."
+	},
+	"Slack - for when Get-Help just isnt enough":{
+		
 	}
 
 }
