@@ -73,3 +73,24 @@ If you haven't started using VSCode snippets yet then access them via the **File
     "$${1:VariableName} = foreach($${2:ItemName} in $${3:SetName}){",
     "${0:## loop logic in here}",
     "}"
+
+## SQL Server Configuration Manager
+
+### Prefix: _SSCM
+
+    Description:
+    Pastes the path to the MMC snap-in for SQL Server Configuration Manager for all versions. Press tab until you are on the line for the version that you want to manage and then press F8.
+
+    Sample:
+    "<# SQL Server 2017 Configuration Manager#> mmc.exe /32 C:\WINDOWS\SysWOW64\SQLServerManager14.msc"
+    "<# SQL Server 2016 Configuration Manager#> mmc.exe /32 C:\WINDOWS\SysWOW64\SQLServerManager13.msc"
+
+## Event Viewer
+
+### Prefix: _eventviewer
+
+    Description:
+    Pastes the path to the Event Viewer. Press F8 to open Event Viewer.
+
+    Sample:
+    "C:\WINDOWS\system32\eventvwr.msc "

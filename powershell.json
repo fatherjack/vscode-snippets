@@ -1,4 +1,4 @@
-
+{
 
 	"Regex shortcuts": {
 		"prefix": "_regx",
@@ -36,7 +36,7 @@
 		"prefix": "_foreachDB",
 		"body": [
 			"foreach(\\$DB in \\$SMOServer.databases){",
-			"    "{0:Your script logic here}",
+			"    ${0:Your script logic here}",
 			"}"
 		],
 		"description": "For each loop for SQL Server database itteration"
@@ -63,4 +63,21 @@
 			"}"
 		],
 		"description": "Presents a HashTable variable in place for the results of a foreach iteration that collects data."
+	},
+	"SSCM": {
+		"prefix": "_sscm",
+		"body": [
+			"<# SQL Server 2017 Configuration Manager#> mmc.exe /32 C:\\WINDOWS\\SysWOW64\\SQLServerManager14.msc ${1}",
+			"<# SQL Server 2016 Configuration Manager#> mmc.exe /32 C:\\WINDOWS\\SysWOW64\\SQLServerManager13.msc ${0}"
+		],
+		"description": "start SQL Server Configuration Manager"
+	},
+	"EventViewer": {
+		"prefix": "_eventviewer",
+		"body": [
+			"C:\\WINDOWS\\system32\\eventvwr.msc ${0}"
+		],
+		"description": "start Event Viewer."
 	}
+
+}
