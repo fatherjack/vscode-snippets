@@ -80,7 +80,9 @@
 		"description": "start Event Viewer."
 	},
 	"Slack - for when Get-Help just isnt enough":{
-		
+		"prefix": "_slack",
+		"body": ["C:\\Users\\Jonathan\\AppData\\Local\\slack\\slack.exe"],
+		"description": "Slack - for when Get-Help just isnt enough, or just to chat."
 	}
 
 }

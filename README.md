@@ -94,3 +94,13 @@ If you haven't started using VSCode snippets yet then access them via the **File
 
     Sample:
     "C:\WINDOWS\system32\eventvwr.msc "
+
+## Slack
+
+### Prefix: _slack
+
+    Description:
+    "Sometimes Get-Help doesnt have all the information you need. That's when your friends come in."
+
+    Sample:
+    "C:\Users\Jonathan\AppData\Local\slack\slack.exe"
