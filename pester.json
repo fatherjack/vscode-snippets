@@ -1,0 +1,47 @@
+{
+    /*
+        These are PowerShell snippets which you can use in Visual Studio Code
+        To use them click File --> Preferences --> User Snippets and type PowerShell
+        or edit $env:\appdata\code\user\snippets\powershell.json
+        In general and in order I converted existing snippets like this
+            Replace `$ with $$
+            Replace \ with \\
+            Replace " with \"
+            \r for new line
+            \t for tab
+            Each line in ""
+            , at the end of each line in the body	except the last one
+            Look out for red or green squiggles :-)
+
+    */
+    "IfShouldProcess": {
+        "prefix": "_pIfShouldProcess",
+        "body": [
+            "if ($$PSCmdlet.ShouldProcess(\"\",\"\")){",
+            "",
+            "}"
+        ],
+        "description": "The If Should Process"
+    },
+    "SupportsShouldProcess": {
+        "prefix": "_pSupportsShouldProcess",
+        "body": [
+            "[cmdletbinding(SupportsShouldProcess)]",
+            "Param("
+        ],
+        "description": "Supports Should Process"
+    },
+    "AssertMock": {
+        "prefix": "_pAssertMock",
+        "body": [
+            "$$assertMockParams = @{",
+            "'CommandName' = 'Get-Variable'",
+            "'Times'       = 2",
+            "'Exactly'     = $$true",
+            "}",
+            "Assert-MockCalled @assertMockParams"
+        ],
+        "description": "AssertMock snippet for Pestering"
+    }
+
+}

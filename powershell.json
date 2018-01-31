@@ -1,5 +1,4 @@
 {
-
 	"Regex shortcuts": {
 		"prefix": "_regx",
 		"body": [
@@ -41,20 +40,33 @@
 		],
 		"description": "For each loop for SQL Server database itteration"
 	},
-	"SQL Assemblies": {
-		"prefix": "_SQLAssemblies",
+	"SQL Assemblies 1": {
+		"prefix": "_SQLAssemblies1",
 		"body": [
 			"[System.Reflection.Assembly]::LoadWithPartialName('Microsoft.SqlServer.SMO') | Out-Null ",
 			"[System.Reflection.Assembly]::LoadWithPartialName('Microsoft.SqlServer.SMOExtended') | Out-Null "
 		],
-		"description": "Lines to load SQL Server assemblies"
+		"description": "Load SQL Server SMO an SMOExtended assemblies"
 	},
-	"GetHelp":{
-		"prefix":"_help",
-		"body": ["Get-Help ${1:FunctionName} -Full | clip | notepad.exe$0"],
+	"SQL Assemblies 2": {
+		"prefix": "_SQLAssemblies2",
+		"body": [
+			"[void][reflection.assembly]::LoadWithPartialName( \"Microsoft.SqlServer.Management.Common\" );",
+			"[void][reflection.assembly]::LoadWithPartialName( \"Microsoft.SqlServer.SmoEnum\" );",
+			"[void][reflection.assembly]::LoadWithPartialName( \"Microsoft.SqlServer.Smo\" );",
+			"[void][reflection.assembly]::LoadWithPartialName( \"Microsoft.SqlServer.SmoExtended \" );",
+			"[void][System.Reflection.Assembly]::LoadWithPartialName(\"Microsoft.SqlServer.ConnectionInfo\") "
+		],
+		"description": "Loads the SQL Server Management Common, SmoEnum, SMO, SMOExtended and ConnectionInfo assemblies"
+	},
+	"GetHelp": {
+		"prefix": "_help",
+		"body": [
+			"Get-Help ${1:FunctionName} -Full | clip | notepad.exe$0"
+		],
 		"description": "Alternate to Get-Help for when the remove Get-Help - ShowWindow in PSv6"
 	},
-	"HashTableForEach":{
+	"HashTableForEach": {
 		"prefix": "_HashTableForEach",
 		"body": [
 			"$${1:VariableName} = @{}",
@@ -79,10 +91,270 @@
 		],
 		"description": "start Event Viewer."
 	},
-	"Slack - for when Get-Help just isnt enough":{
+	"Slack - for when Get-Help just isnt enough": {
 		"prefix": "_slack",
-		"body": ["C:\\Users\\Jonathan\\AppData\\Local\\slack\\slack.exe"],
+		"body": [
+			"C:\\Users\\Jonathan\\AppData\\Local\\slack\\slack.exe"
+		],
 		"description": "Slack - for when Get-Help just isnt enough, or just to chat."
+	},
+	"SQL Authentication SMO": {
+		"prefix": "SQL Authentication SMO",
+		"body": [
+			"$$Server = \"${1:Servername}\"",
+			"$$sqllogin = Get-Credential ",
+			"$$srv = New-Object Microsoft.SqlServer.Management.Smo.Server $$server",
+			"$$srv.ConnectionContext.LoginSecure = $$false",
+			"$$srv.ConnectionContext.set_Login($$sqllogin.username)",
+			"$$srv.ConnectionContext.set_SecurePassword($$sqllogin.Password)",
+			"\r",
+			"try { ",
+			"\t$$srv.ConnectionContext.Connect() ",
+			"} ",
+			"catch { ",
+			"\tthrow \"Can't connect to $$server or access denied. Quitting.\" ",
+			"}"
+		],
+		"description": "Creates a SQL Authentication SMO Server Object"
+	},
+	"DataTable": {
+		"prefix": "DataTable",
+		"body": [
+			"# Create Table Object",
+			"$$table = New-Object system.Data.DataTable $$TableName",
+			"\r# Create Columns",
+			"$$col1 = New-Object system.Data.DataColumn NAME1,([string])",
+			"$$col2 = New-Object system.Data.DataColumn NAME2,([decimal])",
+			"\r#Add the Columns to the table",
+			"$$table.columns.add($$col1)",
+			"$$table.columns.add($$col2)",
+			"\r# Create a new Row",
+			"$$row = $$table.NewRow() ",
+			"\r# Add values to new row",
+			"$$row.Name1 = 'VALUE'",
+			"$$row.NAME2 = 'VALUE'",
+			"\r#Add new row to table",
+			"$$table.Rows.Add($$row)"
+		],
+		"description": "Creates a Data Table Object"
+	},
+	"Formatted Duration": {
+		"prefix": "Formatted Duration",
+		"body": [
+			"$$FormattedDuration = @{",
+			"\tName       = 'FormattedDuration'",
+			"\tExpression = {",
+			"\t\t[timespan]$$_.RunDuration.ToString().PadLeft(6,'0').insert(4,':').insert(2,':')",
+			"\t}",
+			"}"
+		],
+		"description": "Formats Get-SQLAgentJobHistory into timespan"
+	},
+	"Prompt for input": {
+		"prefix": "Prompt for input",
+		"body": [
+			"# Get some input from users ",
+			"$$title = \"Put your Title Here\" ",
+			"$$message = \"Put Your Message here (Y/N)\" ",
+			"$$yes = New-Object System.Management.Automation.Host.ChoiceDescription \"&Yes\", \"Will continue\" ",
+			"$$no = New-Object System.Management.Automation.Host.ChoiceDescription \"&No\", \"Will exit\" ",
+			"$$options = [System.Management.Automation.Host.ChoiceDescription[]]($$yes, $$no) ",
+			"$$result = $$host.ui.PromptForChoice($$title, $$message, $$options, 0) ",
+			"\r",
+			"if ($$result -eq 1) { ",
+			"\tWrite-Output \"User pressed no!\"",
+			"}",
+			"elseif ($$result -eq 0){ ",
+			"\tWrite-Output \"User pressed yes!\"",
+			"}"
+		],
+		"description": "Simple way of gathering input from users with simple yes and no"
+	},
+	"Run SQL query with SMO": {
+		"prefix": "SQL query with SMO",
+		"body": [
+			"$$srv = New-Object -TypeName Microsoft.SqlServer.Management.Smo.Server -ArgumentList $$Server",
+			"$$SqlConnection = $$srv.ConnectionContext",
+			"$$SqlConnection.StatementTimeout = 8000",
+			"$$SqlConnection.ConnectTimeout = 10",
+			"$$SqlConnection.Connect()",
+			"$$Results = $$SqlConnection.ExecuteWithResults($$Query).Tables",
+			"$$SqlConnection.Disconnect()"
+		],
+		"description": "creates SMO object and runs a sql command"
+	},
+	"Bulk copy from data table": {
+		"prefix": "Bulk copy from data table",
+		"body": [
+			"$$sqlserver = ''",
+			"$$database = ''",
+			"$$table = ''",
+			"$$batchsize = 5000",
+			"\r",
+			"# Build the sqlbulkcopy connection, and set the timeout to infinite",
+			"$$connectionstring = \"Data Source=$$sqlserver;Integrated Security=true;Initial Catalog=$$database;\"",
+			"$$bulkcopy = New-Object Data.SqlClient.SqlBulkCopy($$connectionstring, [System.Data.SqlClient.SqlBulkCopyOptions]::TableLock)",
+			"$$bulkcopy.DestinationTableName = $$table",
+			"$$bulkcopy.bulkcopyTimeout = 0",
+			"$$bulkcopy.batchsize = $$batchsize",
+			"$$bulkcopy.WriteToServer($$datatable)",
+			"$$datatable.Clear()"
+		],
+		"description": "Bulk copy from data table"
+	},
+	"WSMan Test and CIM instead of WMI": {
+		"prefix": "WSMan Test and CIM instead of WMI",
+		"body": [
+			"## Servername",
+			"$$Server = ''",
+			"\r",
+			"## Test for WSMan",
+			"$$WSMAN = Test-WSMan $$Server",
+			"\r",
+			"## Change Protocol if needed for CimSession",
+			"if($$WSMAN.ProductVersion.Contains('Stack: 2.0')) {",
+			"\t$$opt = New-CimSessionOption -Protocol Dcom",
+			"\t$$s = New-CimSession -ComputerName $$Server -SessionOption $$opt",
+			"}",
+			"else {",
+			"\t$$s = New-CimSession -ComputerName $$Server",
+			"}",
+			"\r",
+			"## Do your funky CIM stuff",
+			"Get-CimInstance -ClassName Win32_OperatingSystem -CimSession $$s| select LastBootUpTime "
+		],
+		"description": "Creates a CiM Session depending on the results of the WSMan test"
+	},
+	"Max Length of Datatable": {
+		"prefix": "Max Length of Datatable",
+		"body": [
+			"$$columns = ($$datatable | Get-Member -MemberType Property).Name",
+			"foreach($$column in $$Columns) {",
+			"    $$max = 0",
+			"    foreach ($$a in $$datatable){",
+			"        if($$max -lt $$a.$$column.length){",
+			"            $$max = $$a.$$column.length",
+			"        }",
+			"    }",
+			"    Write-Output \"$$column max length is $$max\"",
+			"}"
+		],
+		"description": "Takes a datatable object and iterates through it to get the max length of the string columns - useful for data loads"
+	},
+	"stopWatch": {
+		"prefix": "Stopwatch",
+		"body": [
+			"$$sw = [diagnostics.stopwatch]::StartNew()"
+		],
+		"description": "Starts a stopwatch"
+	},
+	"New Excel Object": {
+		"prefix": "Excel Object",
+		"body": [
+			"# Create a .com object for Excel",
+			"$$xl = new-object -comobject excel.application",
+			"$$xl.Visible = $$true # Set this to False when you run in production",
+			"$$wb = $$xl.Workbooks.Add() # Add a workbook ",
+			"$$ws = $$wb.Worksheets.Item(1) # Add a worksheet",
+			"$$cells=$$ws.Cells",
+			"\r ",
+			"Do Some Stuff",
+			"\r ",
+			"perhaps",
+			"\r  ",
+			"$$cells.item($$row,$$col)=\"Server\"",
+			"$$cells.item($$row,$$col).font.size=16",
+			"$$Cells.item($$row,$$col).Columnwidth = 10",
+			"$$col++",
+			"\r",
+			"$$wb.Saveas(\"C:\\temp\\Test$$filename.xlsx\")",
+			"$$xl.quit()"
+		],
+		"description": "Creates a New Excel Object"
+	},
+	"Simple Create Database": {
+		"prefix": "Database - Create with SMO",
+		"body": [
+			"##Create a database",
+			"$$server = ''",
+			"$$DBName = 'TheBeardsDatabase'",
+			"$$db = New-Object Microsoft.SqlServer.Management.Smo.Database $$Server, $$DBName",
+			"$$db.Create()"
+		],
+		"description": "Create Database using SMO and defaults"
+	},
+	"Create a database Role": {
+		"prefix": "Role - Database Create with SMO",
+		"body": [
+			"##Create a role",
+			"$$server = ''",
+			"$$DBName = ''",
+			"$$RoleName = ''",
+			"$$srv = New-Object Microsoft.SqlServer.Management.Smo.Server $$Server",
+			"$$db = $$srv.Databases[$$DBName]",
+			"$$Role = New-Object Microsoft.SqlServer.Management.Smo.DatabaseRole $$db, $$RoleName",
+			"$$Role.Create()"
+		],
+		"description": "Simple SMO to create a Database Role"
+	},
+	"SQL firewall Rules": {
+		"prefix": "Firewall Rules SQL",
+		"body": [
+			"#Enabling SQL Server Ports",
+			"New-NetFirewallRule -DisplayName “SQL Server” -Direction Inbound –Protocol TCP –LocalPort 1433 -Action allow",
+			"New-NetFirewallRule -DisplayName “SQL Admin Connection” -Direction Inbound –Protocol TCP –LocalPort 1434 -Action allow",
+			"New-NetFirewallRule -DisplayName “SQL Database Management” -Direction Inbound –Protocol UDP –LocalPort 1434 -Action allow",
+			"New-NetFirewallRule -DisplayName “SQL Service Broker” -Direction Inbound –Protocol TCP –LocalPort 4022 -Action allow",
+			"New-NetFirewallRule -DisplayName “SQL Debugger/RPC” -Direction Inbound –Protocol TCP –LocalPort 135 -Action allow",
+			"#Enabling SQL Analysis Ports",
+			"New-NetFirewallRule -DisplayName “SQL Analysis Services” -Direction Inbound –Protocol TCP –LocalPort 2383 -Action allow",
+			"New-NetFirewallRule -DisplayName “SQL Browser” -Direction Inbound –Protocol TCP –LocalPort 2382 -Action allow",
+			"#Enabling Misc. Applications",
+			"New-NetFirewallRule -DisplayName “HTTP” -Direction Inbound –Protocol TCP –LocalPort 80 -Action allow",
+			"New-NetFirewallRule -DisplayName “SSL” -Direction Inbound –Protocol TCP –LocalPort 443 -Action allow",
+			"New-NetFirewallRule -DisplayName “SQL Server Browse Button Service” -Direction Inbound –Protocol UDP –LocalPort 1433 -Action allow"
+		],
+		"description": "Set Firewall for SQL "
+	},
+	"File and Printer firewall Rules": {
+		"prefix": "Firewall Rules Remote - File and Printer",
+		"body": [
+			"Set-NetFirewallRule -DisplayGroup 'File And Printer Sharing' -Enabled True"
+		],
+		"description": "Set Firewal for Remote Mangememnt WMI etc"
+	},
+	"Ping firewall Rules": {
+		"prefix": "Firewall Rules Ping",
+		"body": [
+			"New-NetFirewallRule -Name Allow_Ping -Description 'Allow Ping' -Protocol ICMPv4 -Icmptype 8 -Enabled True -Profile Any -Action Allow"
+		],
+		"description": "Set Firewall for ping"
+	},
+	"Remote Management firewall Rules": {
+		"prefix": "Firewall Rules Remote - wmi",
+		"body": [
+			"Get-NetFirewallRule -DisplayGroup 'Remote*' | Set-NetFirewallRule -Enabled True"
+		],
+		"description": "Set Firewall for Remote Management"
+	},
+	"Show All Excel Colours": {
+		"prefix": "Excel Colours",
+		"body": [
+			"$xl = new-object -comobject excel.application",
+			"$xl.Visible = $true",
+			"$xl.DisplayAlerts = $False",
+			"$wb = $xl.Workbooks.Add()",
+			"$ws = $wb.Worksheets.Item(1)",
+			"$row = 1",
+			"$i = 1",
+			"For($i = 1; $i -lt 57; $i++){",
+			"$ws.Cells.Item($row, 1) = \"'$'ws.Cells.Item($row, 2).Font.ColorIndex = \" + $row",
+			"$ws.Cells.Item($row, 2).Font.ColorIndex = $row",
+			"$ws.Cells.Item($row, 2) = \"test \" + $row",
+			"$row++",
+			"}",
+			"[void]$ws.cells.entireColumn.Autofit()"
+		],
+		"description": "Shows all the colour indexes for the Excel colours"
 	}
-
 }

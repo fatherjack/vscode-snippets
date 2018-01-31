@@ -1,0 +1,11 @@
+{
+
+    "WhoIsActive": {
+        "prefix": "_whoisactive",
+        "body": [
+            "exec dbaadmin.dbo.sp_whoisactive"
+        ],
+        "description": "Runs sp_whoisactive. Press Ctrl + Shift + E to execute in VSCode."
+    }
+
+}
