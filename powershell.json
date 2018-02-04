@@ -99,7 +99,7 @@
 		"description": "Slack - for when Get-Help just isnt enough, or just to chat."
 	},
 	"SQL Authentication SMO": {
-		"prefix": "SQL Authentication SMO",
+		"prefix": "_SQL Authentication SMO",
 		"body": [
 			"$$Server = \"${1:Servername}\"",
 			"$$sqllogin = Get-Credential ",
@@ -118,7 +118,7 @@
 		"description": "Creates a SQL Authentication SMO Server Object"
 	},
 	"DataTable": {
-		"prefix": "DataTable",
+		"prefix": "_DataTable",
 		"body": [
 			"# Create Table Object",
 			"$$table = New-Object system.Data.DataTable $$TableName",
@@ -139,7 +139,7 @@
 		"description": "Creates a Data Table Object"
 	},
 	"Formatted Duration": {
-		"prefix": "Formatted Duration",
+		"prefix": "_Formatted Duration",
 		"body": [
 			"$$FormattedDuration = @{",
 			"\tName       = 'FormattedDuration'",
@@ -151,7 +151,7 @@
 		"description": "Formats Get-SQLAgentJobHistory into timespan"
 	},
 	"Prompt for input": {
-		"prefix": "Prompt for input",
+		"prefix": "_Prompt for input",
 		"body": [
 			"# Get some input from users ",
 			"$$title = \"Put your Title Here\" ",
@@ -171,7 +171,7 @@
 		"description": "Simple way of gathering input from users with simple yes and no"
 	},
 	"Run SQL query with SMO": {
-		"prefix": "SQL query with SMO",
+		"prefix": "_SQL query with SMO",
 		"body": [
 			"$$srv = New-Object -TypeName Microsoft.SqlServer.Management.Smo.Server -ArgumentList $$Server",
 			"$$SqlConnection = $$srv.ConnectionContext",
@@ -184,7 +184,7 @@
 		"description": "creates SMO object and runs a sql command"
 	},
 	"Bulk copy from data table": {
-		"prefix": "Bulk copy from data table",
+		"prefix": "_Bulk copy from data table",
 		"body": [
 			"$$sqlserver = ''",
 			"$$database = ''",
@@ -203,7 +203,7 @@
 		"description": "Bulk copy from data table"
 	},
 	"WSMan Test and CIM instead of WMI": {
-		"prefix": "WSMan Test and CIM instead of WMI",
+		"prefix": "_WSMan Test and CIM instead of WMI",
 		"body": [
 			"## Servername",
 			"$$Server = ''",
@@ -226,7 +226,7 @@
 		"description": "Creates a CiM Session depending on the results of the WSMan test"
 	},
 	"Max Length of Datatable": {
-		"prefix": "Max Length of Datatable",
+		"prefix": "_Max Length of Datatable",
 		"body": [
 			"$$columns = ($$datatable | Get-Member -MemberType Property).Name",
 			"foreach($$column in $$Columns) {",
@@ -242,14 +242,14 @@
 		"description": "Takes a datatable object and iterates through it to get the max length of the string columns - useful for data loads"
 	},
 	"stopWatch": {
-		"prefix": "Stopwatch",
+		"prefix": "_Stopwatch",
 		"body": [
 			"$$sw = [diagnostics.stopwatch]::StartNew()"
 		],
 		"description": "Starts a stopwatch"
 	},
 	"New Excel Object": {
-		"prefix": "Excel Object",
+		"prefix": "_Excel Object",
 		"body": [
 			"# Create a .com object for Excel",
 			"$$xl = new-object -comobject excel.application",
@@ -273,7 +273,7 @@
 		"description": "Creates a New Excel Object"
 	},
 	"Simple Create Database": {
-		"prefix": "Database - Create with SMO",
+		"prefix": "_Create database with SMO",
 		"body": [
 			"##Create a database",
 			"$$server = ''",
@@ -284,7 +284,7 @@
 		"description": "Create Database using SMO and defaults"
 	},
 	"Create a database Role": {
-		"prefix": "Role - Database Create with SMO",
+		"prefix": "_Create database Role with SMO",
 		"body": [
 			"##Create a role",
 			"$$server = ''",
@@ -298,7 +298,7 @@
 		"description": "Simple SMO to create a Database Role"
 	},
 	"SQL firewall Rules": {
-		"prefix": "Firewall Rules SQL",
+		"prefix": "_Create Firewall Rules SQL",
 		"body": [
 			"#Enabling SQL Server Ports",
 			"New-NetFirewallRule -DisplayName “SQL Server” -Direction Inbound –Protocol TCP –LocalPort 1433 -Action allow",
@@ -314,31 +314,31 @@
 			"New-NetFirewallRule -DisplayName “SSL” -Direction Inbound –Protocol TCP –LocalPort 443 -Action allow",
 			"New-NetFirewallRule -DisplayName “SQL Server Browse Button Service” -Direction Inbound –Protocol UDP –LocalPort 1433 -Action allow"
 		],
-		"description": "Set Firewall for SQL "
+		"description": "Create firewall rules for SQL - TCP ports ,80,135,443,2382,2383,1433,1434,4022; UDP ports 1433,1434"
 	},
 	"File and Printer firewall Rules": {
-		"prefix": "Firewall Rules Remote - File and Printer",
+		"prefix": "_Firewall Rules Remote - File and Printer",
 		"body": [
 			"Set-NetFirewallRule -DisplayGroup 'File And Printer Sharing' -Enabled True"
 		],
 		"description": "Set Firewal for Remote Mangememnt WMI etc"
 	},
 	"Ping firewall Rules": {
-		"prefix": "Firewall Rules Ping",
+		"prefix": "_Firewall Rules Ping",
 		"body": [
 			"New-NetFirewallRule -Name Allow_Ping -Description 'Allow Ping' -Protocol ICMPv4 -Icmptype 8 -Enabled True -Profile Any -Action Allow"
 		],
 		"description": "Set Firewall for ping"
 	},
 	"Remote Management firewall Rules": {
-		"prefix": "Firewall Rules Remote - wmi",
+		"prefix": "_Firewall Rules Remote - wmi",
 		"body": [
 			"Get-NetFirewallRule -DisplayGroup 'Remote*' | Set-NetFirewallRule -Enabled True"
 		],
 		"description": "Set Firewall for Remote Management"
 	},
 	"Show All Excel Colours": {
-		"prefix": "Excel Colours",
+		"prefix": "_Excel Colours",
 		"body": [
 			"$xl = new-object -comobject excel.application",
 			"$xl.Visible = $true",
@@ -356,5 +356,34 @@
 			"[void]$ws.cells.entireColumn.Autofit()"
 		],
 		"description": "Shows all the colour indexes for the Excel colours"
+	},
+	"Credential": {
+		"prefix": "_Cred_Single",
+		"body": [
+			"<# save a credential to a file#>",
+			"$$Cred = Get-Credential",
+			"$$Cred | Export-CliXml -Path \"$env:userprofile\\Secret.Cred\"",
+			"",
+			"<# read a credential from a file #>",
+			"$$Cred = Import-CliXml -Path \"$env:userprofile\\Secret.Cred\"",
+			"Invoke-Command -Computername 'Server01' -Credential $Cred {whoami}"
+		],
+		"description": "Snippets for creating a secure file for credential details and for importing credential from a file. with thanks for code example to @Jaap_Brasser - https://www.jaapbrasser.com/quickly-and-securely-storing-your-credentials-powershell/"
+	},
+	"Credentials": {
+		"prefix": "_Cred_Multiple",
+		"body": [
+			"<# save more than one credential to a file#>",
+			"$$Creds = @{",
+			"'Admin' = Get-Credential -message 'Please enter ADMINSTRATOR credentials'",
+			"'User' = Get-Credential -message 'Please enter USER credentials'",
+			"}",
+			"$$Creds | Export-CliXml -Path \"$env:userprofile\\Secrets.Cred\"",
+			"\r\r",
+			"<# read multiple credentials from a file #>",
+			"$$Creds = Import-CliXml -Path \"$env:userprofile\\Secrets.Cred\"",
+			"Invoke-Command -Computername 'Server01' -Credential $Cred {whoami}"
+		],
+		"description": "Snippets for creating a secure file for multiple credential details and for importing multiple credential from a file. with thanks for code example to @Jaap_Brasser - https://www.jaapbrasser.com/quickly-and-securely-storing-your-credentials-powershell/"
 	}
 }
