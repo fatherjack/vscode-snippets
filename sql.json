@@ -6,6 +6,24 @@
             "exec dbaadmin.dbo.sp_whoisactive"
         ],
         "description": "Runs sp_whoisactive. Press Ctrl + Shift + E to execute in VSCode."
+    },
+    "Create Stored Procedure": {
+        "prefix": "_sproc",
+        "body": [
+            "USE AdventureWorks2012;",
+            "GO",
+            "CREATE PROCEDURE ${1:schema.procedurename}",
+            "\t@${2:LastName},",
+            "\t@${3:FirstName}",
+            "AS",
+            "\tSET NOCOUNT ON;",
+            "\t${4}SELECT FirstName, LastName, Department",
+            "\tFROM HumanResources.vEmployeeDepartmentHistory",
+            "\tWHERE FirstName = @${3:FirstName} AND LastName = @${2:LastName}",
+            "\tAND EndDate IS NULL;",
+            "GO "
+        ],
+        "description": "Snippet to create a stored procedure. ref https://docs.microsoft.com/en-us/sql/relational-databases/stored-procedures/create-a-stored-procedure "
     }
 
 }
