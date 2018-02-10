@@ -362,13 +362,13 @@
 		"body": [
 			"<# save a credential to a file#>",
 			"$$Cred = Get-Credential",
-			"$$Cred | Export-CliXml -Path \"$env:userprofile\\Secret.Cred\"",
+			"$$Cred | Export-CliXml -Path \"\\${env:\\userprofile}\\Secret.Cred\"",
 			"",
 			"<# read a credential from a file #>",
-			"$$Cred = Import-CliXml -Path \"$env:userprofile\\Secret.Cred\"",
+			"$$Cred = Import-CliXml -Path \"\\${env:\\userprofile}\\Secret.Cred\"",
 			"Invoke-Command -Computername 'Server01' -Credential $Cred {whoami}"
 		],
-		"description": "Snippets for creating a secure file for credential details and for importing credential from a file. with thanks for code example to @Jaap_Brasser - https://www.jaapbrasser.com/quickly-and-securely-storing-your-credentials-powershell/"
+		"description": "Snippets for creating a secure file for credential details and for importing credential from a file"
 	},
 	"Credentials": {
 		"prefix": "_Cred_Multiple",
@@ -378,12 +378,12 @@
 			"'Admin' = Get-Credential -message 'Please enter ADMINSTRATOR credentials'",
 			"'User' = Get-Credential -message 'Please enter USER credentials'",
 			"}",
-			"$$Creds | Export-CliXml -Path \"$env:userprofile\\Secrets.Cred\"",
+			"$$Creds | Export-CliXml -Path \"\\{$env:\\userprofile}\\Secrets.Cred\"",
 			"\r\r",
 			"<# read multiple credentials from a file #>",
-			"$$Creds = Import-CliXml -Path \"$env:userprofile\\Secrets.Cred\"",
+			"$$Creds = Import-CliXml -Path \"\\{$env:\\userprofile}\\Secrets.Cred\"",
 			"Invoke-Command -Computername 'Server01' -Credential $Cred {whoami}"
 		],
-		"description": "Snippets for creating a secure file for multiple credential details and for importing multiple credential from a file. with thanks for code example to @Jaap_Brasser - https://www.jaapbrasser.com/quickly-and-securely-storing-your-credentials-powershell/"
+		"description": "Snippets for creating a secure file for multiple credential details and for importing multiple credential from a file"
 	}
 }
