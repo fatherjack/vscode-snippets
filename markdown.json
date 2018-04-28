@@ -1,0 +1,38 @@
+{
+"Markdown cheatsheet": {
+    "prefix": "_mdCheat",
+    "body": [
+        "### Headers -",
+        "",
+        "# Header1",
+        "",
+        "## Header2",
+        "",
+        "### Header3",
+        "",
+        "### Emphasis",
+        "",
+        "**This is Bold**",
+        "",
+        " _This is Italic_",
+        "",
+        "### Blockquotes",
+        "",
+        "> This will be in a blockquote"
+    ],
+    "description": "A quick cheatsheet for Markdown formatting "
+},
+"Scrap area for upcoming snippets": {
+    "prefix": "zz",
+    "body": [
+        "Headers",
+        "Emphasis",
+        "Blockquotes",
+        "ListUnordered",
+        "ListOrdered",
+        "Image",
+        "Links",
+        "Escape"
+    ]
+}
+}
