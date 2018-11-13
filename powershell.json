@@ -62,7 +62,7 @@
 	"GetHelp": {
 		"prefix": "_help",
 		"body": [
-			"Get-Help ${1:FunctionName} -Full | clip | notepad.exe$0"
+			"get-help ${0} -full | clip ; \\$file = \"C:\\temp\\hlp${0}.txt\"; New-Item -ItemType File -Path \\$file -Force; set-content -Path \\$file -Value \\$(Get-Clipboard); ii \\$file"
 		],
 		"description": "Alternate to Get-Help for when the remove Get-Help - ShowWindow in PSv6"
 	},
