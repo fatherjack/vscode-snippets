@@ -1,5 +1,5 @@
 {
-	"Regex shortcuts": {
+		"Regex shortcuts": {
 		"prefix": "_regx",
 		"body": [
 			"<#",
@@ -23,367 +23,140 @@
 		"description": "Quick reference of common regex expressions"
 	},
 	"SQL SMO": {
-		"prefix": "_SQLsmo",
+		"prefix": "_smo",
 		"body": [
 			"${1}\\$Servers = get-content ${2}\"C:\\Scripts\\Powershell\\Lookups\\Servers.txt\" ",
 			"${3}\\$Server = \"\\$ENV:COMPUTERNAME\\\\${4}sql2016\"",
-			"\\$SMOServer = new-object ('Microsoft.SQLServer.Management.Smo.Server') \\$Server$0"
+			"\\$SMOServer = new-object ('Microsoft.SQLServer.Management.Smo.Server') \\$Server",
+			"$0"
 		],
 		"description": "SQL Server SMO line"
 	},
 	"For each SQL DB": {
 		"prefix": "_foreachDB",
 		"body": [
-			"foreach(\\$DB in \\$SMOServer.databases){",
-			"    ${0:Your script logic here}",
-			"}"
+			"foreach(\\$DB in \\$SMOServer.databases){$0}",
+			"    ",
+			""
 		],
 		"description": "For each loop for SQL Server database itteration"
 	},
-	"SQL Assemblies 1": {
-		"prefix": "_SQLAssemblies1",
+	"SQL Assemblies": {
+		"prefix": "_SQLAssemblies",
 		"body": [
 			"[System.Reflection.Assembly]::LoadWithPartialName('Microsoft.SqlServer.SMO') | Out-Null ",
 			"[System.Reflection.Assembly]::LoadWithPartialName('Microsoft.SqlServer.SMOExtended') | Out-Null "
 		],
-		"description": "Load SQL Server SMO an SMOExtended assemblies"
+		"description": "Lines to load SQL Server assemblies"
 	},
-	"SQL Assemblies 2": {
-		"prefix": "_SQLAssemblies2",
+	"SQL Server Configuration Manager": {
+		"prefix": "_conman",
 		"body": [
-			"[void][reflection.assembly]::LoadWithPartialName( \"Microsoft.SqlServer.Management.Common\" );",
-			"[void][reflection.assembly]::LoadWithPartialName( \"Microsoft.SqlServer.SmoEnum\" );",
-			"[void][reflection.assembly]::LoadWithPartialName( \"Microsoft.SqlServer.Smo\" );",
-			"[void][reflection.assembly]::LoadWithPartialName( \"Microsoft.SqlServer.SmoExtended \" );",
-			"[void][System.Reflection.Assembly]::LoadWithPartialName(\"Microsoft.SqlServer.ConnectionInfo\") "
+			"<# SQL Server 2012 #> mmc C:\\Windows\\SysWOW64\\SQLServerManager11.msc${1}",
+			"<# SQL Server 2014 #> mmc C:\\Windows\\SysWOW64\\SQLServerManager12.msc${2}",
+			"<# SQL Server 2016 #> mmc C:\\Windows\\SysWOW64\\SQLServerManager13.msc${3}",
+			"<# SQL Server 2017 #> mmc C:\\Windows\\SysWOW64\\SQLServerManager14.msc${4}",
+			"<# SQL Server 2019 #> mmc C:\\Windows\\SysWOW64\\SQLServerManager15.msc${5}"
 		],
-		"description": "Loads the SQL Server Management Common, SmoEnum, SMO, SMOExtended and ConnectionInfo assemblies"
+		"description": "location and launcher for SQL Server Configuration Manager msc snappin"
 	},
-	"GetHelp": {
+	"Event Viewer": {
+		"prefix": "_eventviewer",
+		"body": [
+			"C:\\WINDOWS\\system32\\eventvwr.msc${0}"
+		],
+		"description": "location and launcher for SQL Server Configuration Manager msc snappin"
+	},
+	"Help because Get-Help doesn't have ShowWindow": {
 		"prefix": "_help",
 		"body": [
 			"get-help ${0} -full | clip ; \\$file = \"C:\\temp\\hlp${0}.txt\"; New-Item -ItemType File -Path \\$file -Force; set-content -Path \\$file -Value \\$(Get-Clipboard); ii \\$file"
 		],
-		"description": "Alternate to Get-Help for when the remove Get-Help - ShowWindow in PSv6"
-	},
-	"HashTableForEach": {
-		"prefix": "_HashTableForEach",
-		"body": [
-			"$${1:VariableName} = @{}",
-			"$${1:VariableName} = foreach($${2:ItemName} in $${3:SetName}){",
-			"${0:## loop logic in here}",
-			"}"
-		],
-		"description": "Presents a HashTable variable in place for the results of a foreach iteration that collects data."
-	},
-	"SSCM": {
-		"prefix": "_sscm",
-		"body": [
-			"<# SQL Server 2017 Configuration Manager#> mmc.exe /32 C:\\WINDOWS\\SysWOW64\\SQLServerManager14.msc ${1}",
-			"<# SQL Server 2016 Configuration Manager#> mmc.exe /32 C:\\WINDOWS\\SysWOW64\\SQLServerManager13.msc ${0}"
-		],
-		"description": "start SQL Server Configuration Manager"
-	},
-	"EventViewer": {
-		"prefix": "_eventviewer",
-		"body": [
-			"C:\\WINDOWS\\system32\\eventvwr.msc ${0}"
-		],
-		"description": "start Event Viewer."
-	},
-	"Slack - for when Get-Help just isnt enough": {
-		"prefix": "_slack",
-		"body": [
-			"C:\\Users\\Jonathan\\AppData\\Local\\slack\\slack.exe"
-		],
-		"description": "Slack - for when Get-Help just isnt enough, or just to chat."
-	},
-	"SQL Authentication SMO": {
-		"prefix": "_SQL Authentication SMO",
-		"body": [
-			"$$Server = \"${1:Servername}\"",
-			"$$sqllogin = Get-Credential ",
-			"$$srv = New-Object Microsoft.SqlServer.Management.Smo.Server $$server",
-			"$$srv.ConnectionContext.LoginSecure = $$false",
-			"$$srv.ConnectionContext.set_Login($$sqllogin.username)",
-			"$$srv.ConnectionContext.set_SecurePassword($$sqllogin.Password)",
-			"\r",
-			"try { ",
-			"\t$$srv.ConnectionContext.Connect() ",
-			"} ",
-			"catch { ",
-			"\tthrow \"Can't connect to $$server or access denied. Quitting.\" ",
-			"}"
-		],
-		"description": "Creates a SQL Authentication SMO Server Object"
-	},
-	"DataTable": {
-		"prefix": "_DataTable",
-		"body": [
-			"# Create Table Object",
-			"$$table = New-Object system.Data.DataTable $$TableName",
-			"\r# Create Columns",
-			"$$col1 = New-Object system.Data.DataColumn NAME1,([string])",
-			"$$col2 = New-Object system.Data.DataColumn NAME2,([decimal])",
-			"\r#Add the Columns to the table",
-			"$$table.columns.add($$col1)",
-			"$$table.columns.add($$col2)",
-			"\r# Create a new Row",
-			"$$row = $$table.NewRow() ",
-			"\r# Add values to new row",
-			"$$row.Name1 = 'VALUE'",
-			"$$row.NAME2 = 'VALUE'",
-			"\r#Add new row to table",
-			"$$table.Rows.Add($$row)"
-		],
-		"description": "Creates a Data Table Object"
-	},
-	"Formatted Duration": {
-		"prefix": "_Formatted Duration",
-		"body": [
-			"$$FormattedDuration = @{",
-			"\tName       = 'FormattedDuration'",
-			"\tExpression = {",
-			"\t\t[timespan]$$_.RunDuration.ToString().PadLeft(6,'0').insert(4,':').insert(2,':')",
-			"\t}",
-			"}"
-		],
-		"description": "Formats Get-SQLAgentJobHistory into timespan"
-	},
-	"Prompt for input": {
-		"prefix": "_Prompt for input",
-		"body": [
-			"# Get some input from users ",
-			"$$title = \"Put your Title Here\" ",
-			"$$message = \"Put Your Message here (Y/N)\" ",
-			"$$yes = New-Object System.Management.Automation.Host.ChoiceDescription \"&Yes\", \"Will continue\" ",
-			"$$no = New-Object System.Management.Automation.Host.ChoiceDescription \"&No\", \"Will exit\" ",
-			"$$options = [System.Management.Automation.Host.ChoiceDescription[]]($$yes, $$no) ",
-			"$$result = $$host.ui.PromptForChoice($$title, $$message, $$options, 0) ",
-			"\r",
-			"if ($$result -eq 1) { ",
-			"\tWrite-Output \"User pressed no!\"",
-			"}",
-			"elseif ($$result -eq 0){ ",
-			"\tWrite-Output \"User pressed yes!\"",
-			"}"
-		],
-		"description": "Simple way of gathering input from users with simple yes and no"
-	},
-	"Run SQL query with SMO": {
-		"prefix": "_SQL query with SMO",
-		"body": [
-			"$$srv = New-Object -TypeName Microsoft.SqlServer.Management.Smo.Server -ArgumentList $$Server",
-			"$$SqlConnection = $$srv.ConnectionContext",
-			"$$SqlConnection.StatementTimeout = 8000",
-			"$$SqlConnection.ConnectTimeout = 10",
-			"$$SqlConnection.Connect()",
-			"$$Results = $$SqlConnection.ExecuteWithResults($$Query).Tables",
-			"$$SqlConnection.Disconnect()"
-		],
-		"description": "creates SMO object and runs a sql command"
-	},
-	"Bulk copy from data table": {
-		"prefix": "_Bulk copy from data table",
-		"body": [
-			"$$sqlserver = ''",
-			"$$database = ''",
-			"$$table = ''",
-			"$$batchsize = 5000",
-			"\r",
-			"# Build the sqlbulkcopy connection, and set the timeout to infinite",
-			"$$connectionstring = \"Data Source=$$sqlserver;Integrated Security=true;Initial Catalog=$$database;\"",
-			"$$bulkcopy = New-Object Data.SqlClient.SqlBulkCopy($$connectionstring, [System.Data.SqlClient.SqlBulkCopyOptions]::TableLock)",
-			"$$bulkcopy.DestinationTableName = $$table",
-			"$$bulkcopy.bulkcopyTimeout = 0",
-			"$$bulkcopy.batchsize = $$batchsize",
-			"$$bulkcopy.WriteToServer($$datatable)",
-			"$$datatable.Clear()"
-		],
-		"description": "Bulk copy from data table"
-	},
-	"WSMan Test and CIM instead of WMI": {
-		"prefix": "_WSMan Test and CIM instead of WMI",
-		"body": [
-			"## Servername",
-			"$$Server = ''",
-			"\r",
-			"## Test for WSMan",
-			"$$WSMAN = Test-WSMan $$Server",
-			"\r",
-			"## Change Protocol if needed for CimSession",
-			"if($$WSMAN.ProductVersion.Contains('Stack: 2.0')) {",
-			"\t$$opt = New-CimSessionOption -Protocol Dcom",
-			"\t$$s = New-CimSession -ComputerName $$Server -SessionOption $$opt",
-			"}",
-			"else {",
-			"\t$$s = New-CimSession -ComputerName $$Server",
-			"}",
-			"\r",
-			"## Do your funky CIM stuff",
-			"Get-CimInstance -ClassName Win32_OperatingSystem -CimSession $$s| select LastBootUpTime "
-		],
-		"description": "Creates a CiM Session depending on the results of the WSMan test"
-	},
-	"Max Length of Datatable": {
-		"prefix": "_Max Length of Datatable",
-		"body": [
-			"$$columns = ($$datatable | Get-Member -MemberType Property).Name",
-			"foreach($$column in $$Columns) {",
-			"    $$max = 0",
-			"    foreach ($$a in $$datatable){",
-			"        if($$max -lt $$a.$$column.length){",
-			"            $$max = $$a.$$column.length",
-			"        }",
-			"    }",
-			"    Write-Output \"$$column max length is $$max\"",
-			"}"
-		],
-		"description": "Takes a datatable object and iterates through it to get the max length of the string columns - useful for data loads"
-	},
-	"stopWatch": {
-		"prefix": "_Stopwatch",
-		"body": [
-			"$$sw = [diagnostics.stopwatch]::StartNew()"
-		],
-		"description": "Starts a stopwatch"
-	},
-	"New Excel Object": {
-		"prefix": "_Excel Object",
-		"body": [
-			"# Create a .com object for Excel",
-			"$$xl = new-object -comobject excel.application",
-			"$$xl.Visible = $$true # Set this to False when you run in production",
-			"$$wb = $$xl.Workbooks.Add() # Add a workbook ",
-			"$$ws = $$wb.Worksheets.Item(1) # Add a worksheet",
-			"$$cells=$$ws.Cells",
-			"\r ",
-			"Do Some Stuff",
-			"\r ",
-			"perhaps",
-			"\r  ",
-			"$$cells.item($$row,$$col)=\"Server\"",
-			"$$cells.item($$row,$$col).font.size=16",
-			"$$Cells.item($$row,$$col).Columnwidth = 10",
-			"$$col++",
-			"\r",
-			"$$wb.Saveas(\"C:\\temp\\Test$$filename.xlsx\")",
-			"$$xl.quit()"
-		],
-		"description": "Creates a New Excel Object"
-	},
-	"Simple Create Database": {
-		"prefix": "_Create database with SMO",
-		"body": [
-			"##Create a database",
-			"$$server = ''",
-			"$$DBName = 'TheBeardsDatabase'",
-			"$$db = New-Object Microsoft.SqlServer.Management.Smo.Database $$Server, $$DBName",
-			"$$db.Create()"
-		],
-		"description": "Create Database using SMO and defaults"
-	},
-	"Create a database Role": {
-		"prefix": "_Create database Role with SMO",
-		"body": [
-			"##Create a role",
-			"$$server = ''",
-			"$$DBName = ''",
-			"$$RoleName = ''",
-			"$$srv = New-Object Microsoft.SqlServer.Management.Smo.Server $$Server",
-			"$$db = $$srv.Databases[$$DBName]",
-			"$$Role = New-Object Microsoft.SqlServer.Management.Smo.DatabaseRole $$db, $$RoleName",
-			"$$Role.Create()"
-		],
-		"description": "Simple SMO to create a Database Role"
-	},
-	"SQL firewall Rules": {
-		"prefix": "_Create Firewall Rules SQL",
-		"body": [
-			"#Enabling SQL Server Ports",
-			"New-NetFirewallRule -DisplayName “SQL Server” -Direction Inbound –Protocol TCP –LocalPort 1433 -Action allow",
-			"New-NetFirewallRule -DisplayName “SQL Admin Connection” -Direction Inbound –Protocol TCP –LocalPort 1434 -Action allow",
-			"New-NetFirewallRule -DisplayName “SQL Database Management” -Direction Inbound –Protocol UDP –LocalPort 1434 -Action allow",
-			"New-NetFirewallRule -DisplayName “SQL Service Broker” -Direction Inbound –Protocol TCP –LocalPort 4022 -Action allow",
-			"New-NetFirewallRule -DisplayName “SQL Debugger/RPC” -Direction Inbound –Protocol TCP –LocalPort 135 -Action allow",
-			"#Enabling SQL Analysis Ports",
-			"New-NetFirewallRule -DisplayName “SQL Analysis Services” -Direction Inbound –Protocol TCP –LocalPort 2383 -Action allow",
-			"New-NetFirewallRule -DisplayName “SQL Browser” -Direction Inbound –Protocol TCP –LocalPort 2382 -Action allow",
-			"#Enabling Misc. Applications",
-			"New-NetFirewallRule -DisplayName “HTTP” -Direction Inbound –Protocol TCP –LocalPort 80 -Action allow",
-			"New-NetFirewallRule -DisplayName “SSL” -Direction Inbound –Protocol TCP –LocalPort 443 -Action allow",
-			"New-NetFirewallRule -DisplayName “SQL Server Browse Button Service” -Direction Inbound –Protocol UDP –LocalPort 1433 -Action allow"
-		],
-		"description": "Create firewall rules for SQL - TCP ports ,80,135,443,2382,2383,1433,1434,4022; UDP ports 1433,1434"
-	},
-	"File and Printer firewall Rules": {
-		"prefix": "_Firewall Rules Remote - File and Printer",
-		"body": [
-			"Set-NetFirewallRule -DisplayGroup 'File And Printer Sharing' -Enabled True"
-		],
-		"description": "Set Firewal for Remote Mangememnt WMI etc"
-	},
-	"Ping firewall Rules": {
-		"prefix": "_Firewall Rules Ping",
-		"body": [
-			"New-NetFirewallRule -Name Allow_Ping -Description 'Allow Ping' -Protocol ICMPv4 -Icmptype 8 -Enabled True -Profile Any -Action Allow"
-		],
-		"description": "Set Firewall for ping"
-	},
-	"Remote Management firewall Rules": {
-		"prefix": "_Firewall Rules Remote - wmi",
-		"body": [
-			"Get-NetFirewallRule -DisplayGroup 'Remote*' | Set-NetFirewallRule -Enabled True"
-		],
-		"description": "Set Firewall for Remote Management"
-	},
-	"Show All Excel Colours": {
-		"prefix": "_Excel Colours",
-		"body": [
-			"$xl = new-object -comobject excel.application",
-			"$xl.Visible = $true",
-			"$xl.DisplayAlerts = $False",
-			"$wb = $xl.Workbooks.Add()",
-			"$ws = $wb.Worksheets.Item(1)",
-			"$row = 1",
-			"$i = 1",
-			"For($i = 1; $i -lt 57; $i++){",
-			"$ws.Cells.Item($row, 1) = \"'$'ws.Cells.Item($row, 2).Font.ColorIndex = \" + $row",
-			"$ws.Cells.Item($row, 2).Font.ColorIndex = $row",
-			"$ws.Cells.Item($row, 2) = \"test \" + $row",
-			"$row++",
-			"}",
-			"[void]$ws.cells.entireColumn.Autofit()"
-		],
-		"description": "Shows all the colour indexes for the Excel colours"
+		"description": "Lets you enter the name of a command and paste the content into Notepad for viewing."
 	},
 	"Credential": {
 		"prefix": "_Cred_Single",
 		"body": [
-			"<# save a credential to a file#>",
-			"$$Cred = Get-Credential",
-			"$$Cred | Export-CliXml -Path \"\\${env:\\userprofile}\\Secret.Cred\"",
-			"",
-			"<# read a credential from a file #>",
-			"$$Cred = Import-CliXml -Path \"\\${env:\\userprofile}\\Secret.Cred\"",
-			"Invoke-Command -Computername 'Server01' -Credential $Cred {whoami}"
+			"$$Cred | Export-CliXml -Path \"\\$\{{env:\\userprofile}\\Secret.Cred\"",
 		],
-		"description": "Snippets for creating a secure file for credential details and for importing credential from a file"
+		"description": "Snippets for creating a secure file for credential details and for importing credential from a file. with thanks for code example to @Jaap_Brasser - https://www.jaapbrasser.com/quickly-and-securely-storing-your-credentials-powershell/"
 	},
-	"Credentials": {
-		"prefix": "_Cred_Multiple",
+	"Type Enumeration values": {
+		"prefix": "_enum",
 		"body": [
-			"<# save more than one credential to a file#>",
-			"$$Creds = @{",
-			"'Admin' = Get-Credential -message 'Please enter ADMINSTRATOR credentials'",
-			"'User' = Get-Credential -message 'Please enter USER credentials'",
-			"}",
-			"$$Creds | Export-CliXml -Path \"\\{$env:\\userprofile}\\Secrets.Cred\"",
-			"\r\r",
-			"<# read multiple credentials from a file #>",
-			"$$Creds = Import-CliXml -Path \"\\{$env:\\userprofile}\\Secrets.Cred\"",
-			"Invoke-Command -Computername 'Server01' -Credential $Cred {whoami}"
+			"# example: $sql.PerfMonMode.GetType()",
+			"# example: [System.Enum]::GetValues([Microsoft.SqlServer.Management.Smo.PerfMonMode])",
+			"${1:VariableName}.${2:PropertyName}.GetType().FullName",
+			"[System.Enum]::GetValues([Microsoft.SqlServer.Management.Smo.${3:FullNameFromGetTypeResults}])${0}",
+			""
 		],
-		"description": "Snippets for creating a secure file for multiple credential details and for importing multiple credential from a file"
+		"description": "Snippet to fill System Enumeration code to get possible values for a GetType that gives System.Enum type."
+	},
+	"Error handler": {
+		"prefix":"_ErrorHandling",
+		"body": [
+			"#Error handling", 
+			"\\$ErrorActionPreference = \"stop\";",
+			"Trap {",
+			    "\\$err = \\$_.Exception",
+			    "while (\\$err.InnerException ) {",
+			        "\\$err = \\$err.InnerException",
+			        "Write-Output \\$err.Message",
+				"};",
+			"};"
+		],
+		"description": "Snippet to add default error handler section."
+	},
+	"MSLicense":{
+		"prefix": "_License",
+		"body": ["<#",
+".SYNOPSIS",
+"    ${1}",
+".DESCRIPTION",
+"    ${2}",
+".EXAMPLE",
+"    ${3}",
+".INPUTS",
+"    ${4}",
+".OUTPUTS",
+"    ${5}",
+"-----------------------------------------------------------------------------------------------------------------------------------",
+"Script name  : ${6}",
+"Authors      : ${7}",
+"Version      : ${8}",
+"Dependencies : ${9}",
+"-----------------------------------------------------------------------------------------------------------------------------------",
+"-----------------------------------------------------------------------------------------------------------------------------------",
+"Version Changes:",
+"Date:       Version: Changed By:     Info:",
+"    ${10}",
+"-----------------------------------------------------------------------------------------------------------------------------------",
+"DISCLAIMER",
+"   THIS CODE IS SAMPLE CODE. THESE SAMPLES ARE PROVIDED \"AS IS\" WITHOUT WARRANTY OF ANY KIND.",
+"   MICROSOFT FURTHER DISCLAIMS ALL IMPLIED WARRANTIES INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES",
+"   OF MERCHANTABILITY OR OF FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK ARISING OUT OF THE USE OR",
+"   PERFORMANCE OF THE SAMPLES REMAINS WITH YOU. IN NO EVENT SHALL MICROSOFT OR ITS SUPPLIERS BE LIABLE FOR",
+"   ANY DAMAGES WHATSOEVER (INCLUDING, WITHOUT LIMITATION, DAMAGES FOR LOSS OF BUSINESS PROFITS, BUSINESS",
+"   INTERRUPTION, LOSS OF BUSINESS INFORMATION, OR OTHER PECUNIARY LOSS) ARISING OUT OF THE USE OF OR",
+"   INABILITY TO USE THE SAMPLES, EVEN IF MICROSOFT HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.",
+"   BECAUSE SOME STATES DO NOT ALLOW THE EXCLUSION OR LIMITATION OF LIABILITY FOR CONSEQUENTIAL OR",
+"   INCIDENTAL DAMAGES, THE ABOVE LIMITATION MAY NOT APPLY TO YOU.",
+"#>",
+"    ${0}"],
+		"description": "Snippet for Microsoft distributed scripts"
+	},
+	"Custom Object": {
+		"prefix": "_CustomObject",
+		"body": [
+			"$$result = New-Object PSObject -Property @{",
+            	"'Name' = 'me'",
+            	"'Id' = 17",
+            	"'Status' = New-Object PSObject -Property @{",
+	                "'Code'= 'OK'",
+					"'Time' = Get-Date",
+				"}",
+			"}"
+			],
+			"description": "Sample custom object creation."
 	}
 }
